@@ -129,7 +129,7 @@ class ROSduct(object):
             msg.conn_name = topic_name
             msg.conn_type = topic_type
             msg.alias_name = local_name
-            msg.latch = latch
+            msg.latch = latch if latch.__class__==bool else latch.lower() == 'true'
             self.add_remote_topic(msg)
 
         for l_t in self.local_topics:
@@ -147,7 +147,7 @@ class ROSduct(object):
             msg.conn_name = topic_name
             msg.conn_type = topic_type
             msg.alias_name = remote_name
-            msg.latch = latch
+            msg.latch = latch if latch.__class__==bool else latch.lower() == 'true'
             self.add_local_topic(msg)
 
         # Services
@@ -425,37 +425,33 @@ class ROSduct(object):
         Check if the provided message types are installed.
         """
         for rt in self.remote_topics:
-            if len(rt) == 2:
-                _, topic_type = rt
-            elif len(rt) == 3:
-                _, topic_type, _ = rt
+            if len(rt) >= 2:
+                topic_type = rt[1]
+
             if not is_ros_message_installed(topic_type):
                 rospy.logwarn(
                     "{} could not be found in the system.".format(topic_type))
 
         for lt in self.local_topics:
-            if len(lt) == 2:
-                _, topic_type = lt
-            elif len(lt) == 3:
-                _, topic_type, _ = lt
+            if len(lt) >= 2:
+                topic_type = lt[1]
+
             if not is_ros_message_installed(topic_type):
                 rospy.logwarn(
                     "{} could not be found in the system.".format(topic_type))
 
         for rs in self.remote_services:
-            if len(rs) == 2:
-                _, service_type = rs
-            elif len(rs) == 3:
-                _, service_type, _ = rs
+            if len(rs) >= 2:
+                service_type = rs[1]
+
             if not is_ros_service_installed(service_type):
                 rospy.logwarn(
                     "{} could not be found in the system.".format(service_type))
 
         for ls in self.local_services:
-            if len(ls) == 2:
-                _, service_type = ls
-            elif len(ls) == 3:
-                _, service_type, _ = ls
+            if len(ls) >= 2:
+                service_type = ls[1]
+
             if not is_ros_service_installed(service_type):
                 rospy.logwarn(
                     "{} could not be found in the system.".format(service_type))
