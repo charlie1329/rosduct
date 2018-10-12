@@ -29,7 +29,7 @@ yaml_config = '''
 rosbridge_ip: 192.168.1.31
 rosbridge_port: 9090
 # Topics being published in the robot to expose locally
-remote_topics: [ ['/joint_states', 'sensor_msgs/JointState'], 
+remote_topics: [ ['/joint_states', 'sensor_msgs/JointState'],
                     ['/tf', 'tf2_msgs/TFMessage'],
                     ['/scan', 'sensor_msgs/LaserScan']
                     ]
@@ -118,26 +118,36 @@ class ROSduct(object):
             if len(r_t) == 2:
                 topic_name, topic_type = r_t
                 local_name = topic_name
+                latch = False
             elif len(r_t) == 3:
                 topic_name, topic_type, local_name = r_t
+                latch = False
+            elif len(r_t) == 4:
+                topic_name, topic_type, local_name, latch = r_t
 
             msg = ROSDuctConnection()
             msg.conn_name = topic_name
             msg.conn_type = topic_type
             msg.alias_name = local_name
+            msg.latch = latch
             self.add_remote_topic(msg)
 
         for l_t in self.local_topics:
             if len(l_t) == 2:
                 topic_name, topic_type = l_t
                 remote_name = topic_name
+                latch = False
             elif len(l_t) == 3:
                 topic_name, topic_type, remote_name = l_t
+                latch = False
+            elif len(l_t) == 4:
+                topic_name, topic_type, remote_name, latch = l_t
 
             msg = ROSDuctConnection()
             msg.conn_name = topic_name
             msg.conn_type = topic_type
             msg.alias_name = remote_name
+            msg.latch = latch
             self.add_local_topic(msg)
 
         # Services
@@ -396,7 +406,7 @@ class ROSduct(object):
                                        srv=True)
             rospy.loginfo("Waiting for server " + service_name + "...")
             rospy.wait_for_service(service_name)
-            # TODO: error handling in services...                    
+            # TODO: error handling in services...
             try:
                 resp = rosservprox.call(ros_req)
                 resp_dict = from_ROS_to_dict(resp)
