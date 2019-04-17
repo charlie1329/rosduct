@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rosduct</name>
-  <version>0.0.5</version>
+  <version>0.0.6</version>
   <description>ROSduct, the duct of ROS messages. ROSduct acts as a proxy to expose ROS topics, services and parameters from a remote roscore into a local roscore via the [rosbridge protocol](https://github.com/RobotWebTools/rosbridge_suite/blob/develop/ROSBRIDGE_PROTOCOL.md).</description>
 
   <author email="Sammy.Pfeiffer@student.uts.edu.au">Sammy Pfeiffer</author>

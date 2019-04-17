@@ -2,6 +2,16 @@
 Changelog for package rosduct
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.6 (2018-10-12)
+------------------
+* Fix: ROSDuctConnection() object's latch attribute not set (`#5 <https://github.com/LCAS/rosduct/issues/5>`_)
+  * Fix for missing latch for local and remote topics - in ROSDuctConnection objects
+  Setting the default value of msg.latch for local and remote topics to `False`
+  If the latch value is given in the config (takes up to 4 values for topics), that value is taken
+  * msg.latch takes string or bool values for local and remote topics
+  Fix in check_if_msgs_are_installed() when local_topics remote_topics has 4 fields
+* Contributors: Gautham P Das
+
 0.0.5 (2018-10-05)
 ------------------
 * removed cuplicate dep
