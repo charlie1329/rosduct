@@ -119,17 +119,24 @@ class ROSduct(object):
                 topic_name, topic_type = r_t
                 local_name = topic_name
                 latch = False
+                queue_size = 1
             elif len(r_t) == 3:
                 topic_name, topic_type, local_name = r_t
                 latch = False
+                queue_size = 1
             elif len(r_t) == 4:
                 topic_name, topic_type, local_name, latch = r_t
+                queue_size = 1
+            elif len(r_t) == 5:
+                topic_name, topic_type, local_name, latch, queue_size = r_t
+
 
             msg = ROSDuctConnection()
             msg.conn_name = topic_name
             msg.conn_type = topic_type
             msg.alias_name = local_name
             msg.latch = latch if latch.__class__==bool else latch.lower() == 'true'
+            msg.queue_size = queue_size if queue_size.__class__==int else 1
             self.add_remote_topic(msg)
 
         for l_t in self.local_topics:
@@ -137,17 +144,23 @@ class ROSduct(object):
                 topic_name, topic_type = l_t
                 remote_name = topic_name
                 latch = False
+                queue_size = 1
             elif len(l_t) == 3:
                 topic_name, topic_type, remote_name = l_t
                 latch = False
+                queue_size = 1
             elif len(l_t) == 4:
                 topic_name, topic_type, remote_name, latch = l_t
+                queue_size = 1
+            elif len(l_t) == 5:
+                topic_name, topic_type, remote_name, latch, queue_size = l_t
 
             msg = ROSDuctConnection()
             msg.conn_name = topic_name
             msg.conn_type = topic_type
             msg.alias_name = remote_name
             msg.latch = latch if latch.__class__==bool else latch.lower() == 'true'
+            msg.queue_size = queue_size if queue_size.__class__==int else 1
             self.add_local_topic(msg)
 
         # Services
@@ -188,7 +201,8 @@ class ROSduct(object):
     def add_local_topic(self, msg):
         bridgepub = self.client.publisher(msg.alias_name,
                                           msg.conn_type,
-                                          latch=msg.latch)
+                                          latch=msg.latch,
+                                          queue_size=msg.queue_size)
 
         cb_l_to_r = self.create_callback_from_local_to_remote(msg.conn_name,
                                                               msg.conn_type,
@@ -217,7 +231,7 @@ class ROSduct(object):
         rospub = rospy.Publisher(msg.alias_name,
                                  get_ROS_class(msg.conn_type),
                                  # SubscribeListener added later
-                                 queue_size=1,
+                                 queue_size=msg.queue_size,
                                  latch=msg.latch)
 
         cb_r_to_l = self.create_callback_from_remote_to_local(msg.conn_name,

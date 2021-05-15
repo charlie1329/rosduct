@@ -39,6 +39,9 @@ parameter_polling_hz: 1
 
 **Note**: Don't add to remote or local topics the topic `/rosout`.
 
+# Additional Parameters in this fork
+For `remote_topics` and `local_topics`, there are two additional parameters you can provide after the topic name, message type, and alias name. You can also provide a boolean which represents whether the topic should latch, and also a queue_size, which defines the size of the message queue. These should be specified in the order `[<topic name>, <message type>, <alias name>, <latch>, <queue size>]`.
+
 # Example usage with Docker
 This tool came to be mainly to solve a problem with Docker containers. If you are running the Docker container that wants bidirectional communication with a ROS robot, and you are using Linux you can just add `--net host` to your `docker run` command (just after run). But if you are using a Mac [this won't work](https://github.com/docker/for-mac/issues/68). To work around it you can use this package.
 

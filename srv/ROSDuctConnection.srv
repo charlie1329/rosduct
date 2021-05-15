@@ -2,4 +2,5 @@ string conn_name
 string conn_type
 string alias_name
 bool latch
+uint32 queue_size 
 ---
